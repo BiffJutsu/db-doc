@@ -18,7 +18,8 @@ Column = namedtuple('Column',
 	'IS_NULLABLE',
 	'DATA_TYPE',
 	'MAX_LENGTH',
-	'COLUMN_DEFAULT'])
+	'COLUMN_DEFAULT',
+	'IS_IDENTITY'])
 
 Config = namedtuple('Config', ['dbstr'])
 
@@ -133,7 +134,8 @@ class DBService:
 
 	def get_columns(self):
 		sql = """SELECT c.TABLE_NAME, c.COLUMN_NAME, c.IS_NULLABLE,
-		c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.COLUMN_DEFAULT
+		c.DATA_TYPE, c.CHARACTER_MAXIMUM_LENGTH, c.COLUMN_DEFAULT,
+		CAST(COLUMNPROPERTY(object_id(c.TABLE_NAME), c.COLUMN_NAME, 'IsIdentity') as bit) IS_IDENTITY
 		FROM INFORMATION_SCHEMA.COLUMNS c
 		INNER JOIN INFORMATION_SCHEMA.TABLES t on c.TABLE_NAME = t.TABLE_NAME
 		WHERE t.TABLE_NAME != 'sysdiagrams' AND TABLE_TYPE = 'BASE TABLE'
@@ -145,7 +147,8 @@ class DBService:
 				r.IS_NULLABLE,
 				r.DATA_TYPE,
 				r.CHARACTER_MAXIMUM_LENGTH,
-				r.COLUMN_DEFAULT)
+				r.COLUMN_DEFAULT,
+				r.IS_IDENTITY)
 			for r in rows]
 
 	def get_constraints(self):
@@ -221,6 +224,8 @@ class DDSpider:
 		field.uniq = self.cache.is_column_unique(table, col.COLUMN_NAME)
 		field.key = self.cache.is_column_a_key(table, col.COLUMN_NAME)
 		field.ref = self.cache.get_column_reference(table, col.COLUMN_NAME)
+		if col.IS_IDENTITY:
+			field.cap = "Identity"
 		return field
 
 def connection_string(server, catalog):
@@ -239,9 +244,9 @@ def discoverdb(server, catalog, directory):
 	print("Data Dictionary Created: {0}".format(xlservice.fullpath))
 
 def main():
-	server = 'dbserver-test-1'
-	catalog = 'catalog'
-	directory = r'\\network\drive\location\your\folder'
+	server = 'INSERT SERVER'
+	catalog = 'INSERT CATALOG'
+	directory = r'\\your\filesystem\location'
 	discoverdb(server, catalog, directory)
 
 if __name__ == '__main__':
