@@ -4,6 +4,10 @@ import pyodbc as db
 from collections import namedtuple
 import openpyxl as ox
 
+FOREIGN_KEY = "FOREIGN KEY"
+PRIMARY_KEY = "PRIMARY KEY"
+UNIQUE = "UNIQUE"
+
 Constraint = namedtuple('Constraint',
 	['CONSTRAINT_NAME',
 	'CONSTRAINT_TYPE',
@@ -85,7 +89,7 @@ class SchemaCache:
 
 	def get_column_reference(self, table, column):
 		refs = []
-		for fk in (c for c in self.constraints if c.CONSTRAINT_TYPE == "FOREIGN KEY"):
+		for fk in (c for c in self.constraints if c.CONSTRAINT_TYPE == FOREIGN_KEY):
 			if fk.CONSTRAINED_TABLE == table and fk.CONSTRAINED_COLUMN == column:
 				refs.append("{0}.{1}".format(fk.SOURCE_TABLE, fk.SOURCE_COLUMN))
 		if len(refs) > 0:
@@ -98,9 +102,9 @@ class SchemaCache:
 			for c in self.constraints
 			if c.CONSTRAINED_TABLE == table and
 				c.CONSTRAINED_COLUMN == column]
-		if any(c for c in column_constraints if c.CONSTRAINT_TYPE == "PRIMARY KEY"):
+		if any(c for c in column_constraints if c.CONSTRAINT_TYPE == PRIMARY_KEY):
 			vals.append("P")
-		if any(c for c in column_constraints if c.CONSTRAINT_TYPE == "FOREIGN KEY"):
+		if any(c for c in column_constraints if c.CONSTRAINT_TYPE == FOREIGN_KEY):
 			vals.append("F")
 		if len(vals) > 0:
 			return "/".join(vals)
@@ -109,7 +113,7 @@ class SchemaCache:
 	def is_column_unique(self, table, column):
 		return any(c
 			for c in self.constraints
-			if c.CONSTRAINT_TYPE == "UNIQUE" and
+			if c.CONSTRAINT_TYPE == UNIQUE and
 				c.CONSTRAINED_TABLE == table and
 				c.CONSTRAINED_COLUMN == column)
 
