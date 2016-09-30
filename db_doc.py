@@ -218,7 +218,11 @@ class DDSpider:
 		self.xlservice.save()
 
 	def make_field(self, table, col):
-		field = Field(name=col.COLUMN_NAME, typ=col.DATA_TYPE, null=col.IS_NULLABLE, size=col.MAX_LENGTH, default=col.COLUMN_DEFAULT)
+		field = Field(name=col.COLUMN_NAME,
+			typ=col.DATA_TYPE,
+			null=col.IS_NULLABLE,
+			size=col.MAX_LENGTH,
+			default=col.COLUMN_DEFAULT)
 		field.uniq = self.cache.is_column_unique(table, col.COLUMN_NAME)
 		field.key = self.cache.is_column_a_key(table, col.COLUMN_NAME)
 		field.ref = self.cache.get_column_reference(table, col.COLUMN_NAME)
