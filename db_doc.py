@@ -186,7 +186,6 @@ class XLService:
 			ws.cell(row=1, column=j).value = headers[j-1]
 
 	def _write_fields(self, ws, table_desc):
-		max_width = len(table_desc.headers)
 		row_iterable = ws.iter_rows(min_row=2,
 			max_col=len(table_desc.headers),
 			max_row=len(table_desc.fields)+1)
