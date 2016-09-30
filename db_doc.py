@@ -96,7 +96,7 @@ class SchemaCache:
 			return "; ".join(refs)
 		return None
 
-	def is_column_a_key(self, table, column):
+	def get_column_key_types(self, table, column):
 		vals = []
 		column_constraints = [c
 			for c in self.constraints
@@ -228,7 +228,7 @@ class DDSpider:
 			size=col.MAX_LENGTH,
 			default=col.COLUMN_DEFAULT)
 		field.uniq = self.cache.is_column_unique(table, col.COLUMN_NAME)
-		field.key = self.cache.is_column_a_key(table, col.COLUMN_NAME)
+		field.key = self.cache.get_column_key_types(table, col.COLUMN_NAME)
 		field.ref = self.cache.get_column_reference(table, col.COLUMN_NAME)
 		if col.IS_IDENTITY:
 			field.cap = "Identity"
