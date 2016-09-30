@@ -187,12 +187,11 @@ class XLService:
 
 	def _write_fields(self, ws, table_desc):
 		max_width = len(table_desc.headers)
-		n = 0
-		for row in ws.iter_rows(min_row=2,
+		row_iterable = ws.iter_rows(min_row=2,
 			max_col=len(table_desc.headers),
-			max_row=len(table_desc.fields)+1):
-			field = table_desc.fields[n].to_row()
-			n += 1
+			max_row=len(table_desc.fields)+1)
+		fields = (f.to_row() for f in table_desc.fields)
+		for row, field in zip(row_iterable, fields):
 			for cell, val in zip(row, field):
 				cell.value = val
 
@@ -245,8 +244,8 @@ def discoverdb(server, catalog, directory):
 
 def main():
 	server = 'INSERT SERVER'
-	catalog = 'INSERT CATALOG'
-	directory = r'\\your\filesystem\location'
+	catalog = 'INSERT DATABASE'
+	directory = r'\\your\filesystem\location\here'
 	discoverdb(server, catalog, directory)
 
 if __name__ == '__main__':
