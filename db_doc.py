@@ -4,6 +4,10 @@ import pyodbc as db
 from collections import namedtuple
 import openpyxl as ox
 
+SERVER = r'INSERT SERVER'
+CATALOG = r'INSERT CATALOG'
+DIRECTORY = r'\\your\filesystem\location\here'
+
 FOREIGN_KEY = "FOREIGN KEY"
 PRIMARY_KEY = "PRIMARY KEY"
 UNIQUE = "UNIQUE"
@@ -237,7 +241,7 @@ class DDSpider:
 def connection_string(server, catalog):
 	return 'Driver={SQL Server Native Client 11.0};' + \
 	'Server={0};Database={1};'.format(server, catalog) + \
-	'Trusted_Connection=yes;APP=DDSpider;'
+	'Trusted_Connection=yes;APP=DB-DOC;'
 
 def discoverdb(server, catalog, directory):
 	cstr = connection_string(server, catalog)
@@ -250,10 +254,7 @@ def discoverdb(server, catalog, directory):
 	print("Data Dictionary Created: {0}".format(xlservice.fullpath))
 
 def main():
-	server = 'INSERT SERVER'
-	catalog = 'INSERT DATABASE'
-	directory = r'\\your\filesystem\location\here'
-	discoverdb(server, catalog, directory)
+	discoverdb(SERVER, CATALOG, DIRECTORY)
 
 if __name__ == '__main__':
 	main()
