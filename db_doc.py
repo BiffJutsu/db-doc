@@ -5,8 +5,8 @@ from collections import namedtuple
 import openpyxl as ox
 
 SERVER = r'INSERT SERVER'
-CATALOG = r'INSERT CATALOG'
-DIRECTORY = r'\\your\filesystem\location\here'
+CATALOG = r'INSERT DATABASE'
+DIRECTORY = r'\\your\network\location\here'
 
 FOREIGN_KEY = "FOREIGN KEY"
 PRIMARY_KEY = "PRIMARY KEY"
@@ -203,7 +203,7 @@ class XLService:
 				cell.value = val
 
 	def describe_table(self, table_desc):
-		wksht = self._add_sheet(table_desc.table_name)
+		wksht = self._add_sheet(table_desc.table_name[:30])
 		self._write_headers(wksht, table_desc.headers)
 		self._write_fields(wksht, table_desc)
 
