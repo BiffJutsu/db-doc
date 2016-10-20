@@ -210,7 +210,7 @@ class XLService:
 	def save(self):
 		self.wkbk.save(self.fullpath)
 
-class DDSpider:
+class DBDoc:
 	def __init__(self, dbsvc, cache, xlsvc):
 		self.dbservice = dbsvc
 		self.cache = cache
@@ -249,8 +249,8 @@ def discoverdb(server, catalog, directory):
 	dbsvc = DBService(config.dbstr)
 	cache = SchemaCache.bootstrap(dbsvc)
 	xlservice = XLService(directory, dbsvc.dbname)
-	spider = DDSpider(dbsvc, cache, xlservice)
-	spider.run()
+	db_doc = DBDoc(dbsvc, cache, xlservice)
+	db_doc.run()
 	print("Data Dictionary Created: {0}".format(xlservice.fullpath))
 
 def main():
